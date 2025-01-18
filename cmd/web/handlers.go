@@ -4,6 +4,8 @@ import (
   "fmt"
   "net/http"
   "strconv"
+  "log"
+  "html/template"
 )
 
 // handler for home '/'
@@ -14,7 +16,19 @@ func home(w http.ResponseWriter, r *http.Request) {
     return
     }
 
-  w.Write([]byte("Hello from Paste n Go"))
+  ts, err := template.ParseFiles("./ui/html/home.page.html")
+  if err != nil {
+    log.Println(err.Error())
+    http.Error(w, "Internal Server Error", 500)
+    return
+  }
+
+  err = ts.Execute(w, nil)
+  if err != nil {
+    log.Println(err.Error())
+    http.Error(w, "Internal Server Error", 500)
+  }
+  // w.Write([]byte("Hello from Paste n Go"))
 }
 
 // TODO: implement
