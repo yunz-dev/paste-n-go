@@ -23,6 +23,12 @@ func showSnippet(w http.ResponseWriter, r *http.Request) {
 
 // TODO: implement
 func addSnippet(w http.ResponseWriter, r *http.Request) {
+  if r.Method != "POST" {
+    w.Header().Set("Allow", "POST")
+    w.WriteHeader(405)
+    w.Write([]byte("405 method not allowed"))
+    return
+  }
   w.Write([]byte("Adding Snippet..."))
 }
 
