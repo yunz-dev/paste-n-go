@@ -7,6 +7,12 @@ import (
 
 // handler for home '/'
 func home(w http.ResponseWriter, r *http.Request) {
+
+  if r.URL.Path != "/" {
+    http.NotFound(w, r)
+    return
+    }
+
   w.Write([]byte("Hello from Paste n Go"))
 }
 
