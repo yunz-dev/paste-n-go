@@ -1,11 +1,15 @@
 package main
 
 import(
+  "flag"
   "log"
   "net/http"
 )
 
 func main() {
+
+  addr := flag.String("addr", ":4000", "HTTP network address")
+  flag.Parse()
   fileServer := http.FileServer(http.Dir("./ui/static"))
   // initialise new router ServeMux
   mux := http.NewServeMux()
@@ -18,9 +22,9 @@ func main() {
   // NOTE: ListenAndServe follows host:port
   // if no host then it will listen all all
   // hosts available on the computer
-  log.Println("Starting Server on port :4000")
+  log.Printf("Starting Server on port %s", *addr)
   // initialise web server
-  err := http.ListenAndServe(":4000", mux)
+  err := http.ListenAndServe(*addr, mux)
   log.Fatal(err)
 
 }
