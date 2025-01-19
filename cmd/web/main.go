@@ -11,6 +11,11 @@ type Config struct {
   Addr string
 }
 
+type application struct {
+  errLog *log.Logger
+  infoLog *log.Logger
+}
+
 func main() {
 
   cfg := new(Config)
