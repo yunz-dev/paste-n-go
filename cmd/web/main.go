@@ -34,10 +34,15 @@ func main() {
     ErrorLog: errLog,
     Handler: mux,
   }
+
+  app := &application {
+    errLog: errLog,
+    infoLog: infoLog,
+  }
   // add handler functions
-  mux.HandleFunc("/", home)
-  mux.HandleFunc("/snippet", showSnippet)
-  mux.HandleFunc("/snippet/add", addSnippet)
+  mux.HandleFunc("/", app.home)
+  mux.HandleFunc("/snippet", app.showSnippet)
+  mux.HandleFunc("/snippet/add", app.addSnippet)
   mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 
   // NOTE: ListenAndServe follows host:port
