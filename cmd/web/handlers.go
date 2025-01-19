@@ -11,7 +11,7 @@ import (
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
   if r.URL.Path != "/" {
-    http.NotFound(w, r)
+    app.notFound(w)
     return
     }
 
@@ -23,24 +23,21 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
   ts, err := template.ParseFiles(files...)
   if err != nil {
-    app.errLog.Println(err.Error())
-    http.Error(w, "Internal Server Error", 500)
+    app.serverError(w, err)
     return
   }
 
   err = ts.Execute(w, nil)
   if err != nil {
-    app.errLog.Println(err.Error())
-    http.Error(w, "Internal Server Error", 500)
+    app.serverError(w, err)
   }
-  // w.Write([]byte("Hello from Paste n Go"))
 }
 
 // TODO: implement
 func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
   id, err := strconv.Atoi(r.URL.Query().Get("id"))
   if err != nil || id < 1 {
-    http.NotFound(w, r)
+    app.notFound(w)
     return
   }
   fmt.Fprintf(w, "Displaying snippet for id: %d: ", id)
@@ -50,7 +47,7 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 func (app *application) addSnippet(w http.ResponseWriter, r *http.Request) {
   if r.Method != "POST" {
     w.Header().Set("Allow", "POST")
-    http.Error(w, "Method Not Allowed", 405)
+    app.clientError(w, http.StatusMethodNotAllowed)
     return
   }
   w.Write([]byte("Adding Snippet..."))
